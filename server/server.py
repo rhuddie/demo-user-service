@@ -17,8 +17,11 @@ app.config["SQLALCHEMY_DATABASE_URI"] = database_file
 db = SQLAlchemy(app)
 
 
-class Book(db.Model):
-    title = db.Column(db.String(80), unique=True, nullable=False, primary_key=True)
+class User(db.Model):
+    username = db.Column(db.String(80), unique=True, nullable=False, primary_key=True)
+    email = db.Column(db.String(80), unique=True, nullable=False, primary_key=False)
+    dob = db.Column(db.String(80), unique=False, nullable=False, primary_key=False)
+    address = db.Column(db.String(80), unique=False, nullable=False, primary_key=False)
 
     def __repr__(self):
         return "<Title: {}>".format(self.title)
@@ -27,10 +30,15 @@ class Book(db.Model):
 @app.route("/", methods=["GET", "POST"])
 def home():
     if request.form:
-        book = Book(title=request.form.get("title"))
-        db.session.add(book)
+        user = User(
+            username=request.form.get("username"),
+            email=request.form.get("email"),
+            dob=request.form.get("dob"),
+            address=request.form.get("address")
+        )
+        db.session.add(user)
         db.session.commit()
-    return render_template("home.html")
+    return render_template("add-user.html")
 
 
 def database_setup():

@@ -27,8 +27,8 @@ class User(db.Model):
         return "<Title: {}>".format(self.title)
 
 
-@app.route("/", methods=["GET", "POST"])
-def home():
+@app.route("/add-user", methods=["GET", "POST"])
+def add_user():
     if request.form:
         user = User(
             username=request.form.get("username"),
@@ -39,6 +39,12 @@ def home():
         db.session.add(user)
         db.session.commit()
     return render_template("add-user.html")
+
+
+@app.route("/list-users", methods=["GET"])
+def list_users():
+    users = User.query.all()
+    return render_template("list-users.html", users=users)
 
 
 def database_setup():

@@ -1,0 +1,8 @@
+1) Create conda env:
+conda create --name demo-server python=3.6
+
+2) activate
+source activate demo-server
+
+3) Install requirements
+(demo-server) $ pip install -r requirements.txt 

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<title>W3.JS</title>
+<meta charset="utf-8">
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+<table id="tbody">
+  <tr>
+    <th>Username</th>
+    <th>Email</th>
+    <th>DOB</th>
+    <th>Address</th>
+  </tr>
+</table>
+<script>
+$(document).ready(getUsers());
+function getUsers() {
+    $.get("/list", function(data, status){
+       alert("Data: " + data + "\nStatus: " + status);
+       console.log(data["users"]);
+       var tbody = document.getElementById('tbody');
+       jQuery.each(data["users"], function(i, val) {
+           var tr = "<tr><td>";
+           tr += val["username"] + "</td><td>";
+           tr += val["email"] + "</td><td>";
+           tr += val["dob"] + "</td><td>";
+           tr += val["address"] + "</td></tr>";
+           tbody.innerHTML += tr;
+           }
+       )
+    });
+}
+</script>
+</body>
+</html>

@@ -6,3 +6,6 @@ source activate demo-server
 
 3) Install requirements
 (demo-server) $ pip install -r requirements.txt 
+
+
+curl http://127.0.0.1:5000/list

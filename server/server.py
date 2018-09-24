@@ -25,12 +25,14 @@ db = SQLAlchemy(app)
 
 request_parser = reqparse.RequestParser()
 
-FIELDS = ['username', 'email', 'dob', 'address']
+ADD_FIELDS = ['username', 'email', 'dob', 'address']
+GET_FIELDS = ['id'] + ADD_FIELDS
 
 
 class User(db.Model):
-    username = db.Column(db.String(80), unique=True, nullable=False, primary_key=True)
-    email = db.Column(db.String(80), unique=True, nullable=False, primary_key=False)
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False, primary_key=False)
+    email = db.Column(db.String(80), unique=False, nullable=False, primary_key=False)
     dob = db.Column(db.String(80), unique=False, nullable=False, primary_key=False)
     address = db.Column(db.String(80), unique=False, nullable=False, primary_key=False)
 
@@ -45,7 +47,7 @@ class AddUser(Resource):
         return {'data': 'hello world!'}, 200
 
     def post(self):
-        data = {field: request.form.get(field) for field in FIELDS}
+        data = {field: request.form.get(field) for field in ADD_FIELDS}
         user = User(**data)
         db.session.add(user)
         db.session.commit()
@@ -58,7 +60,7 @@ class ListUsers(Resource):
         req_args = request_parser.parse_args()
         users = User.query.all()
         data = {
-            'users': [{field: getattr(u, field) for field in FIELDS} for u in users]
+            'users': [{field: getattr(u, field) for field in User.__table__.columns.keys()} for u in users]
         }
         return data
 
@@ -66,7 +68,7 @@ class ListUsers(Resource):
         req_args = request_parser.parse_args()
 
 
-@app.route("/add-user", methods=["GET", "POST"])
+@app.route("/add-user", methods=["GET"])
 def add_user():
     return render_template("add-user.html")
 

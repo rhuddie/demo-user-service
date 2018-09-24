@@ -105,3 +105,5 @@ venv.bak/
 
 # demo database
 *.db
+
+.idea/

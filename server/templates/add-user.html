@@ -1,12 +1,27 @@
 <html>
   <body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <h1>Add User</h1>
-    <form method="POST" action="/add-user">
+    <form method="POST" action="/add" id="form-user-input">
       <input type="text" name="username">
       <input type="text" name="email">
       <input type="text" name="dob">
       <input type="text" name="address">
-      <input type="submit" value="Add">
+      <input type="submit" value="Add" onclick="postUser();">
     </form>
+    <script>
+    function getData() {
+        var array = jQuery($("#form-user-input")).serializeArray();
+        var json = {};
+        jQuery.each(array, function() {
+            json[this.name] = this.value || '';
+        });
+        return json;
+    }
+    function postUser() {
+        data = getData();
+        $.post("/add", data);
+    }
+    </script>
   </body>
 </html>

@@ -43,7 +43,11 @@ class AddUser(Resource):
         return {'data': 'hello world!'}, 200
 
     def post(self):
-        req_args = request_parser.parse_args()
+        data = {field: request.form.get(field) for field in ['username', 'email', 'dob', 'address']}
+        user = User(**data)
+        db.session.add(user)
+        db.session.commit()
+
 
 
 class ListUsers(Resource):
@@ -53,12 +57,7 @@ class ListUsers(Resource):
         users = User.query.all()
         data = {
             'users': [
-                {
-                    'username': u.username,
-                    'email': u.email,
-                    'dob': u.dob,
-                    'address': u.address
-                }
+                {field: getattr(u, field) for field in ['username', 'email', 'dob', 'address']}
             ] for u in users
         }
         return data

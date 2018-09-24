@@ -9,4 +9,5 @@ source activate demo-server
 
 python3 server/server.py --setup
 
-curl http://127.0.0.1:5000/list
+curl 'http://127.0.0.1:5000/api/add' --data 'username=chip8&email=biff%40hotmail.com67&dob=123456&address=12312313'
+curl http://127.0.0.1:5000/api/list

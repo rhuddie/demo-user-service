@@ -53,7 +53,6 @@ class AddUser(Resource):
         db.session.commit()
 
 
-
 class ListUsers(Resource):
 
     def get(self):
@@ -89,6 +88,6 @@ if __name__ == "__main__":
 if args.setup:
     database_setup()
 else:
-    api.add_resource(AddUser, '/add')
-    api.add_resource(ListUsers, '/list')
+    api.add_resource(AddUser, '/api/add')
+    api.add_resource(ListUsers, '/api/list')
     app.run(debug=True)

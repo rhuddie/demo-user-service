@@ -18,7 +18,7 @@
 <script>
 $(document).ready(getUsers());
 function getUsers() {
-    $.get("/list", function(data, status){
+    $.get("/api/list", function(data, status){
        var tbody = document.getElementById('tbody');
        jQuery.each(data["users"], function(i, val) {
            var tr = "<tr><td>";

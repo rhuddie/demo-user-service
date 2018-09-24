@@ -2,12 +2,12 @@
   <body>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <h1>Add User</h1>
-    <form method="POST" action="/add" id="form-user-input">
+    <form id="form-user-input">
       <input type="text" name="username">
       <input type="text" name="email">
       <input type="text" name="dob">
       <input type="text" name="address">
-      <input type="submit" value="Add" onclick="postUser();">
+      <input type="button" value="Add" onclick="postUser();">
     </form>
     <script>
     function getData() {
@@ -20,7 +20,7 @@
     }
     function postUser() {
         data = getData();
-        $.post("/add", data);
+        $.post("/api/add", data);
     }
     </script>
   </body>

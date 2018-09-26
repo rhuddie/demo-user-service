@@ -13,6 +13,7 @@ from flask_restful import (
     Resource,
 )
 from flask_sqlalchemy import SQLAlchemy
+from sqlite3 import IntegrityError
 
 
 AppSession = namedtuple('AppSession', ['app', 'db', 'api'])
@@ -71,8 +72,10 @@ class AddUser(Resource):
         data = {field: request.form.get(field) for field in ADD_FIELDS}
         user = User(**data)
         db.session.add(user)
-        db.session.commit()
-
+        try:
+            db.session.commit()
+        except IntegrityError as e:
+            return e.orig, 500
 
 class ListUsers(Resource):
 

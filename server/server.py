@@ -87,6 +87,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Start rest api service.")
     parser.add_argument("--setup", action="store_true", help="Setup the database ready for use and exit.")
     parser.add_argument("--db", default="database.db", help="Name of the database to use.")
+    parser.add_argument("--port", default="5000", help="Port number to run the service on.")
     args = parser.parse_args()
     setup_service(get_db_path(args.db))
 if args.setup:
@@ -94,4 +95,4 @@ if args.setup:
 else:
     api.add_resource(AddUser, '/api/add')
     api.add_resource(ListUsers, '/api/list')
-    app.run(debug=True)
+    app.run(debug=True, port=int(args.port))

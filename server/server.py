@@ -85,14 +85,13 @@ def get_db_path(db_name):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Start rest api service.")
-    parser.add_argument("--setup", action="store_true", help="Setup the database ready for use and exit.")
     parser.add_argument("--db", default="database.db", help="Name of the database to use.")
     parser.add_argument("--port", default="5000", help="Port number to run the service on.")
     args = parser.parse_args()
-    setup_service(get_db_path(args.db))
-if args.setup:
+    db_path = get_db_path(args.db)
+    setup_service(db_path)
+if not os.path.exists(db_path):
     db.create_all(app=app)
-else:
-    api.add_resource(AddUser, '/api/add')
-    api.add_resource(ListUsers, '/api/list')
-    app.run(debug=True, port=int(args.port))
+api.add_resource(AddUser, '/api/add')
+api.add_resource(ListUsers, '/api/list')
+app.run(debug=True, port=int(args.port))

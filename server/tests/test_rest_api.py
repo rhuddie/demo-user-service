@@ -3,12 +3,30 @@ import pytest
 from server.server import (
     configure_service,
     get_db_path,
+    User,
 )
 
 
 @pytest.fixture(scope="module")
 def app_session():
     return configure_service(get_db_path('testing.db'))
+
+
+@pytest.fixture(scope="module")
+def add_test_user_session(app_session):
+    data = {'username': 'aa', 'email': 'bb', 'dob': 'cc', 'address': 'dd'}
+    user = User(**data)
+    with app_session.app.app_context():
+        app_session.db.session.add(user)
+        app_session.db.session.commit()
+    return app_session
+
+
+def test_api_list_existing_user(add_test_user_session):
+    with add_test_user_session.api.app.test_client() as c:
+        r = c.get('/api/list')
+        assert r.status_code == 200
+        print(r.data)
 
 
 def test_api_list(app_session):

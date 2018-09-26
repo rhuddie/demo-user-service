@@ -12,7 +12,13 @@ TEST_USER = {'username': 'aa', 'email': 'bb', 'dob': 'cc', 'address': 'dd'}
 
 def delete_test_user(session):
     with session.app.app_context():
-        User.query.filter(**TEST_USER).delete()
+        User.query.filter_by(**TEST_USER).delete()
+        session.db.session.commit()
+
+
+def delete_all_users(session):
+    with session.app.app_context():
+        session.db.session.query(User).delete()
         session.db.session.commit()
 
 
@@ -38,13 +44,20 @@ def add_test_user_session(app_session):
     delete_test_user(app_session)
 
 
-def test_api_add_user(app_session):
-    with app_session.api.app.test_client() as c:
+@pytest.fixture(scope="function")
+def empty_database(app_session):
+    delete_all_users(app_session)
+    yield app_session
+    delete_all_users(app_session)
+
+
+def test_api_add_user(empty_database):
+    with empty_database.api.app.test_client() as c:
         r = c.post('/api/add', data=TEST_USER)
         assert r.status_code == 200
         print(r.data)
         # TODO make this cleanup step
-        delete_test_user(app_session)
+        # delete_test_user(app_session)
 
 
 def test_api_list_existing_user(add_test_user_session):
@@ -54,8 +67,8 @@ def test_api_list_existing_user(add_test_user_session):
         print(r.data)
 
 
-def test_api_list_no_users(app_session):
-    with app_session.api.app.test_client() as c:
+def test_api_list_no_users(empty_database):
+    with empty_database.api.app.test_client() as c:
         r = c.get('/api/list')
         assert r.status_code == 200
         print(r.data)

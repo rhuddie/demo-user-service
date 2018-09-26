@@ -3,6 +3,7 @@ import os
 import requests
 
 from flask import Flask
+from flask import g
 from flask import render_template
 from flask import request
 from flask_restful import (
@@ -13,20 +14,31 @@ from flask_restful import (
 from flask_sqlalchemy import SQLAlchemy
 
 
-project_dir = os.path.dirname(os.path.abspath(__file__))
-database_file = "sqlite:///{}".format(os.path.join(project_dir, "database.db"))
-
-app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = database_file
-
-api = Api(app)
-
-db = SQLAlchemy(app)
-
 request_parser = reqparse.RequestParser()
 
 ADD_FIELDS = ['username', 'email', 'dob', 'address']
 GET_FIELDS = ['id'] + ADD_FIELDS
+
+db = SQLAlchemy()
+app = Flask(__name__)
+api = Api(app)
+
+
+def setup_service(db_path):
+    global app
+    global db
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + db_path
+    db.init_app(app)
+
+
+@app.route("/add-user", methods=["GET"])
+def add_user():
+    return render_template("add-user.html")
+
+
+@app.route("/list-users", methods=["GET"])
+def list_users():
+    return render_template("list-users2.html")
 
 
 class User(db.Model):
@@ -67,26 +79,18 @@ class ListUsers(Resource):
         req_args = request_parser.parse_args()
 
 
-@app.route("/add-user", methods=["GET"])
-def add_user():
-    return render_template("add-user.html")
-
-
-@app.route("/list-users", methods=["GET"])
-def list_users():
-    return render_template("list-users2.html")
-
-
-def database_setup():
-    db.create_all()
+def get_db_path(db_name):
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), db_name)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Start rest api service.")
     parser.add_argument("--setup", action="store_true", help="Setup the database ready for use and exit.")
+    parser.add_argument("--db", default="database.db", help="Name of the database to use.")
     args = parser.parse_args()
+    setup_service(get_db_path(args.db))
 if args.setup:
-    database_setup()
+    db.create_all(app=app)
 else:
     api.add_resource(AddUser, '/api/add')
     api.add_resource(ListUsers, '/api/list')

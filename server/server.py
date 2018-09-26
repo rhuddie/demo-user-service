@@ -24,11 +24,17 @@ app = Flask(__name__)
 api = Api(app)
 
 
-def setup_service(db_path):
+def configure_service(db_path):
+    global api
     global app
     global db
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + db_path
     db.init_app(app)
+    api.add_resource(AddUser, '/api/add')
+    api.add_resource(ListUsers, '/api/list')
+    if not os.path.exists(db_path):
+        db.create_all(app=app)
+    return app, api, db
 
 
 @app.route("/add-user", methods=["GET"])
@@ -83,15 +89,15 @@ def get_db_path(db_name):
     return os.path.join(os.path.dirname(os.path.abspath(__file__)), db_name)
 
 
+def start_service(db_path, port=5000):
+    configure_service(db_path)
+    app.run(debug=True, port=port)
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Start rest api service.")
     parser.add_argument("--db", default="database.db", help="Name of the database to use.")
     parser.add_argument("--port", default="5000", help="Port number to run the service on.")
     args = parser.parse_args()
-    db_path = get_db_path(args.db)
-    setup_service(db_path)
-if not os.path.exists(db_path):
-    db.create_all(app=app)
-api.add_resource(AddUser, '/api/add')
-api.add_resource(ListUsers, '/api/list')
-app.run(debug=True, port=int(args.port))
+    start_service(get_db_path(args.db))
+

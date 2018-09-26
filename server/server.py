@@ -2,6 +2,7 @@ import argparse
 import os
 import requests
 
+from collections import namedtuple
 from flask import Flask
 from flask import g
 from flask import render_template
@@ -13,6 +14,8 @@ from flask_restful import (
 )
 from flask_sqlalchemy import SQLAlchemy
 
+
+AppSession = namedtuple('AppSession', ['app', 'db', 'api'])
 
 request_parser = reqparse.RequestParser()
 
@@ -34,7 +37,7 @@ def configure_service(db_path):
     api.add_resource(ListUsers, '/api/list')
     if not os.path.exists(db_path):
         db.create_all(app=app)
-    return app, api, db
+    return AppSession(app, db, api)
 
 
 @app.route("/add-user", methods=["GET"])

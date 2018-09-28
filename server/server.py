@@ -1,6 +1,7 @@
 import argparse
 import os
 import requests
+import socket
 
 from collections import namedtuple
 from flask import Flask
@@ -51,6 +52,13 @@ def list_users():
     return render_template("list-users2.html")
 
 
+@app.route("/")
+def hello():
+    html = "<h3>Hello {name}!</h3>" \
+           "<b>Hostname:</b> {hostname}<br/>"
+    return html.format(name=os.getenv("NAME", "world"), hostname=socket.gethostname())
+
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False, primary_key=False)
@@ -97,7 +105,7 @@ def get_db_path(db_name):
 
 def start_service(db_path, port=5000):
     configure_service(db_path)
-    app.run(debug=True, port=port)
+    app.run(host='0.0.0.0', debug=True, port=port)
 
 
 if __name__ == "__main__":

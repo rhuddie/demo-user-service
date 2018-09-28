@@ -1,0 +1,4 @@
+# Files to exclude from docker images
+
+# Don't include the user database
+server/*.db

@@ -47,5 +47,11 @@ docker ps
 demo-user-service$ docker cp . [CONTAINER ID]:/demo-server/
 
 
+START SERVICE AND TESTS RUNNING
+docker-compose up
+
+STOP SERVICE AND TESTS RUNNING
+docker-compose down
+
 
 https://docs.docker.com/get-started/part3/#about-services

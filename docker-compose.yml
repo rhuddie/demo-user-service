@@ -1,0 +1,7 @@
+version: '2'
+services:
+  demo-server:
+    image: demo-server
+    build: .
+    ports:
+    - "5000:5000"

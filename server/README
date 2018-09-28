@@ -20,6 +20,9 @@ https://docs.docker.com/get-started/part2/#build-the-app
 BUILD DOCKER IMAGE:
 /demo-user-service/$ docker build -t demo-server .
 
+BUILD TESTS DOCKER IMAGE:
+docker build -t demo-server-tests -f Dockerfile.tests .
+
 RUN THE SERVER:
 demo-user-service/$ sudo docker run --name demo_server -p 5000:5000 demo-server
 
@@ -33,5 +36,16 @@ sudo docker exec -it demo_server pytest server/tests
 
 OPEN SHELL IN RUNNING CONTAINER:
 sudo docker exec -it demo_server bash
+
+OPEN A CONTAINER AND GET A SHELL
+docker run --entrypoint "/bin/bash" -ti --name demo_server_tests -p 5000:5000 demo-server-tests
+
+
+COPY LOCAL FILES INTO RUNNING CONTAINER
+docker ps
+[GET ID]
+demo-user-service$ docker cp . [CONTAINER ID]:/demo-server/
+
+
 
 https://docs.docker.com/get-started/part3/#about-services

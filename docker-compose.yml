@@ -3,5 +3,14 @@ services:
   demo-server:
     image: demo-server
     build: .
+    environment:
+      - SERVER_PORT=5000
     ports:
     - "5000:5000"
+  demo-server-tests:
+    image: demo-server-tests
+    build: .
+    environment:
+      - SERVER_PORT=5001
+    ports:
+    - "5001:5001"

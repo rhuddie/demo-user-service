@@ -6,7 +6,7 @@ from pathlib import Path
 from behave.log_capture import capture
 from selenium import webdriver
 
-from server.tests.ui.features.pages.base import WebdriverBase
+from tests.ui.features.pages.base import WebdriverBase
 
 
 repo_base = Path(__file__).parent.parent.absolute()
@@ -21,7 +21,16 @@ def before_all(context):
 
 def before_scenario(context, scenario):
     desired_cap = {'chromeOptions': {'excludeSwitches': ['disable-popup-blocking']}}
-    driver = webdriver.Chrome(desired_capabilities=desired_cap)
+    opt = webdriver.ChromeOptions()
+    opt.add_argument('--headless')
+    opt.add_argument('--no-sandbox')
+    opt.add_argument('--disable-dev-shm-usage')
+    driver = webdriver.Chrome(options=opt,
+                              service_args=[
+                                  "--verbose",
+                                  "--log-path=chromedriver.log"
+                              ],
+                              desired_capabilities=desired_cap)
     logger.info('Webdriver version: {}'.format(driver.capabilities['version']))
     logger.info('Chromedriver version: {}'.format(
         driver.capabilities['chrome']['chromedriverVersion']))

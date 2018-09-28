@@ -103,7 +103,7 @@ def get_db_path(db_name):
     return os.path.join(os.path.dirname(os.path.abspath(__file__)), db_name)
 
 
-def start_service(db_path, port=5000):
+def start_service(db_path, port):
     configure_service(db_path)
     app.run(host='0.0.0.0', debug=True, port=port)
 
@@ -113,5 +113,6 @@ if __name__ == "__main__":
     parser.add_argument("--db", default="database.db", help="Name of the database to use.")
     parser.add_argument("--port", default="5000", help="Port number to run the service on.")
     args = parser.parse_args()
-    start_service(get_db_path(args.db))
+    server_port = os.getenv('SERVER_PORT', 5000)
+    start_service(get_db_path(args.db), server_port)
 

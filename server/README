@@ -15,8 +15,23 @@ curl http://127.0.0.1:5000/api/list
 python3 -m pytest ./server/tests/test_rest_api.py
 
 
+https://docs.docker.com/get-started/part2/#build-the-app
+
 BUILD DOCKER IMAGE:
-/demo-user-service/server$ docker build -t demo-server .
+/demo-user-service/$ docker build -t demo-server .
 
 RUN THE SERVER:
-demo-user-service/server$ sudo docker run -p 5000:5000 demo-server
+demo-user-service/$ sudo docker run --name demo_server -p 5000:5000 demo-server
+
+START BEHAVE TESTS:
+sudo docker exec -it demo_server behave server/tests/ui/features
+DELETE NAMED CONTAINER
+sudo docker rm /demo_server
+
+RUN PYTESTS:
+sudo docker exec -it demo_server pytest server/tests
+
+OPEN SHELL IN RUNNING CONTAINER:
+sudo docker exec -it demo_server bash
+
+https://docs.docker.com/get-started/part3/#about-services

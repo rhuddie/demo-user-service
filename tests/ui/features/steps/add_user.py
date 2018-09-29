@@ -18,7 +18,7 @@ def add_user(context):
     AddUserPage(context).add_user()
 
 
-@step('I see user is added successfully')
+@step('I see user was added successfully')
 def validate_user_added(context):
     page = AddUserPage(context)
     status = page.status

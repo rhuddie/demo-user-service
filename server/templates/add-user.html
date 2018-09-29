@@ -25,7 +25,9 @@
         <label for="input-address">address:</label>
         <input id="input-address" name="address" type="text">
       </p>
-      <input id="btn-add" type="button" value="Add" onclick="postUser();">
+      <input id="btn-add" type="button" value="Add" onclick="postUser();"><br>
+      <input id="btn-reset" type="button" value="Reset" onclick="clearData()" ><br>
+      <input id="btn-list" type="button" value="List" onclick="location.href='/list-users'" >
     </form>
     <script>
     function getData() {
@@ -36,12 +38,13 @@
         });
         return json;
     }
+    function clearData() {
+        document.getElementById("form-user-input").reset();
+    }
     function postUser() {
         data = getData();
         $.post("/api/add", data)
-          .done(function() {
-            alert( "success!" );
-          })
+          .done(clearData())
           .fail(function() {
             alert( "error" );
           });

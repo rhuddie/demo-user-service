@@ -41,14 +41,20 @@
     }
     function resetForm() {
         document.getElementById("form-user-input").reset();
-        document.getElementById("status-text").innerHTML = ""
+        var status = document.getElementById("status-text")
+        status.innerHTML = ""
+        status.setAttribute("type", "hidden")
     }
     function onSuccess() {
         document.getElementById("form-user-input").reset();
-        document.getElementById("status-text").innerHTML = "User successfully added!"
+        var status = document.getElementById("status-text")
+        status.innerHTML = "User successfully added!"
+        status.setAttribute("type", "success")
     }
     function onError(error) {
-        document.getElementById("status-text").innerHTML = "Error adding user: " + error.responseJSON
+        var status = document.getElementById("status-text")
+        status.innerHTML = "Error adding user: " + error.responseJSON
+        status.setAttribute("type", "error")
     }
     function postUser() {
         data = getData();

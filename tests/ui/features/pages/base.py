@@ -39,5 +39,8 @@ class WebdriverBase:
 
 class CustomElement(WebElement):
 
+    def get_wait(self, timeout):
+        return WebDriverWait(self.parent, timeout)
+
     def find_custom_element(self, cls, by, selector, timeout=0):
         return find_custom_element(self, cls, by, selector, timeout)

@@ -11,19 +11,19 @@
     <form id="form-user-input">
       <p>
         <label for="input-username">username:</label>
-        <input id="input-username" type="text">
+        <input id="input-username" name="username" type="text">
       </p>
       <p>
         <label for="input-email">email:</label>
-        <input id="input-email" type="text">
+        <input id="input-email" name="email" type="text">
       </p>
       <p>
         <label for="input-dob">dob:</label>
-        <input id="input-dob" type="text">
+        <input id="input-dob" name="dob" type="text">
       </p>
       <p>
         <label for="input-address">address:</label>
-        <input id="input-address" type="text">
+        <input id="input-address" name="address" type="text">
       </p>
       <input id="btn-add" type="button" value="Add" onclick="postUser();">
     </form>
@@ -38,7 +38,13 @@
     }
     function postUser() {
         data = getData();
-        $.post("/api/add", data);
+        $.post("/api/add", data)
+          .done(function() {
+            alert( "success!" );
+          })
+          .fail(function() {
+            alert( "error" );
+          });
     }
     </script>
   </body>

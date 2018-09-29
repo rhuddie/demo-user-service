@@ -47,13 +47,14 @@
         document.getElementById("form-user-input").reset();
         document.getElementById("status-text").innerHTML = "User successfully added!"
     }
+    function onError() {
+        document.getElementById("status-text").innerHTML = "Error adding user!"
+    }
     function postUser() {
         data = getData();
         $.post("/api/add", data)
           .done(onSuccess())
-          .fail(function() {
-            alert( "error" );
-          });
+          .fail(onError());
     }
     </script>
   </body>

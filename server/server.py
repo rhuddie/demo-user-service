@@ -1,4 +1,12 @@
+from tornado.wsgi import WSGIContainer
+from tornado.httpserver import HTTPServer
+from tornado.ioloop import IOLoop
+from threading import Thread
+from time import sleep
+
+
 import argparse
+import asyncio
 import os
 import requests
 import socket
@@ -28,6 +36,11 @@ GET_FIELDS = ['id'] + ADD_FIELDS
 db = SQLAlchemy()
 app = Flask(__name__)
 api = Api(app)
+
+
+server_thread = None
+server_thread_io_loop = None
+server_thread_http_server = None
 
 
 def configure_service(db_path):
@@ -109,7 +122,29 @@ def get_db_path(db_name):
 
 def start_service(db_path, port):
     configure_service(db_path)
-    app.run(host='0.0.0.0', debug=True, port=port)
+    start_app(port)
+
+
+def start_app(port):
+    def start():
+        global server_thread_http_server
+        global server_thread_io_loop
+        server_thread_io_loop = IOLoop(make_current=True)
+        server_thread_http_server = HTTPServer(WSGIContainer(app))
+        server_thread_http_server.listen(port)
+        server_thread_io_loop.start()
+    global server_thread
+    server_thread = Thread(target=start)
+    server_thread.start()
+    # wait for the server to fully initialize
+    # sleep(10)
+    # stop_app()
+
+
+def stop_app():
+    server_thread_http_server.stop()
+    server_thread_io_loop.add_callback(server_thread_io_loop.stop)
+    server_thread.join()
 
 
 if __name__ == "__main__":
@@ -117,6 +152,6 @@ if __name__ == "__main__":
     parser.add_argument("--db", default="database.db", help="Name of the database to use.")
     parser.add_argument("--port", default="5000", help="Port number to run the service on.")
     args = parser.parse_args()
-    server_port = os.getenv('SERVER_PORT', 5000)
+    server_port = int(os.getenv('SERVER_PORT', 5000))
     start_service(get_db_path(args.db), server_port)
 

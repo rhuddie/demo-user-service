@@ -6,6 +6,12 @@ from pathlib import Path
 from behave.log_capture import capture
 from selenium import webdriver
 
+from server.server import (
+    configure_service,
+    get_db_path,
+    start_app,
+    stop_app,
+)
 from tests.ui.features.pages.base import WebdriverBase
 
 
@@ -17,6 +23,10 @@ def before_all(context):
     context.base = None
     os.makedirs(os.path.join(str(repo_base), 'features', 'testresults'), exist_ok=True)
     context.repo_base = str(repo_base)
+    port = int(os.getenv('SERVER_PORT', 5005))
+    db_path = get_db_path('testing.db')
+    context.session = configure_service(db_path)
+    start_app(port)
 
 
 def before_scenario(context, scenario):
@@ -50,5 +60,6 @@ def after_step(context, step):
 
 
 def after_all(context):
+    stop_app()
     if hasattr(context, 'display'):
         context.display.stop()

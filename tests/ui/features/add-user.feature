@@ -1,7 +1,8 @@
 Feature: Add user form
 
   Scenario: Add a new user to the system
-    Given I am on the add new user form
+    Given I start with an empty database
+    And I am on the add new user form
     And I enter username bilbobaggins
     And I enter email bilbo@baggins.com
     And I enter dob 22/9/54

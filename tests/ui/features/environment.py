@@ -14,7 +14,7 @@ logger = logging.getLogger()
 
 
 def before_all(context):
-    context.driver = None
+    context.base = None
     os.makedirs(os.path.join(str(repo_base), 'features', 'testresults'), exist_ok=True)
     context.repo_base = str(repo_base)
 
@@ -22,7 +22,8 @@ def before_all(context):
 def before_scenario(context, scenario):
     desired_cap = {'chromeOptions': {'excludeSwitches': ['disable-popup-blocking']}}
     opt = webdriver.ChromeOptions()
-    opt.add_argument('--headless')
+    if os.getenv('HEADLESS', False) == '1':
+        opt.add_argument('--headless')
     opt.add_argument('--no-sandbox')
     opt.add_argument('--disable-dev-shm-usage')
     driver = webdriver.Chrome(options=opt,
@@ -39,9 +40,9 @@ def before_scenario(context, scenario):
 
 @capture
 def after_scenario(context, scenario):
-    if context.driver:
-        context.driver.quit()
-    del context.base
+    if context.base:
+        context.base.driver.quit()
+        del context.base.driver
 
 
 def after_step(context, step):
@@ -49,6 +50,5 @@ def after_step(context, step):
 
 
 def after_all(context):
-    context.driver = None
     if hasattr(context, 'display'):
         context.display.stop()

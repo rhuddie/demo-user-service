@@ -1,13 +1,31 @@
 <html>
+  <style>
+    form  { display: table;      }
+    p     { display: table-row;  }
+    label { display: table-cell; }
+    input { display: table-cell; }
+  </style>
   <body>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <h1>Add User</h1>
     <form id="form-user-input">
-      <input type="text" name="username">
-      <input type="text" name="email">
-      <input type="text" name="dob">
-      <input type="text" name="address">
-      <input type="button" value="Add" onclick="postUser();">
+      <p>
+        <label for="input-username">username:</label>
+        <input id="input-username" type="text">
+      </p>
+      <p>
+        <label for="input-email">email:</label>
+        <input id="input-email" type="text">
+      </p>
+      <p>
+        <label for="input-dob">dob:</label>
+        <input id="input-dob" type="text">
+      </p>
+      <p>
+        <label for="input-address">address:</label>
+        <input id="input-address" type="text">
+      </p>
+      <input id="btn-add" type="button" value="Add" onclick="postUser();">
     </form>
     <script>
     function getData() {

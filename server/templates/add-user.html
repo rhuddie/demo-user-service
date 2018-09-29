@@ -26,9 +26,10 @@
         <input id="input-address" name="address" type="text">
       </p>
       <input id="btn-add" type="button" value="Add" onclick="postUser();"><br>
-      <input id="btn-reset" type="button" value="Reset" onclick="clearData()" ><br>
+      <input id="btn-reset" type="button" value="Reset" onclick="resetForm()" ><br>
       <input id="btn-list" type="button" value="List" onclick="location.href='/list-users'" >
     </form>
+    <p id="status-text"></p>
     <script>
     function getData() {
         var array = jQuery($("#form-user-input")).serializeArray();
@@ -38,13 +39,18 @@
         });
         return json;
     }
-    function clearData() {
+    function resetForm() {
         document.getElementById("form-user-input").reset();
+        document.getElementById("status-text").innerHTML = ""
+    }
+    function onSuccess() {
+        document.getElementById("form-user-input").reset();
+        document.getElementById("status-text").innerHTML = "User successfully added!"
     }
     function postUser() {
         data = getData();
         $.post("/api/add", data)
-          .done(clearData())
+          .done(onSuccess())
           .fail(function() {
             alert( "error" );
           });

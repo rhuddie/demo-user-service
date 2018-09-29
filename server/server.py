@@ -78,6 +78,8 @@ class AddUser(Resource):
 
     def post(self):
         data = {field: request.form.get(field) for field in ADD_FIELDS}
+        if not all(data.values()):
+            return "Incomplete form data!", 500
         user = User(**data)
         db.session.add(user)
         try:

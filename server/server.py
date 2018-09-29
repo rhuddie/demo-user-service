@@ -63,7 +63,7 @@ def add_user():
 
 @app.route("/list-users", methods=["GET"])
 def list_users():
-    return render_template("list-users2.html")
+    return render_template("list-users.html")
 
 
 @app.route("/")

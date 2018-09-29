@@ -26,3 +26,5 @@ def start_test_user_added_database(context):
         context.session.db.session.query(User).delete()
         context.session.db.session.add(user)
         context.session.db.session.commit()
+
+# TODO: Validate that a record exists in the database

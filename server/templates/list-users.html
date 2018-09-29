@@ -1,8 +1,39 @@
+<!DOCTYPE html>
 <html>
-  <body>
-    <h1>Users</h1>
-    {% for user in users %}
-      <p>{{user.username}}</p>
-    {% endfor %}
-  </body>
+<title>W3.JS</title>
+<meta charset="utf-8">
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+<h1>List Users</h1>
+<table id="table-users" border="1">
+  <tr>
+    <th col-id='id'>ID</th>
+    <th col-id='username'>Username</th>
+    <th col-id='email'>Email</th>
+    <th col-id='dob'>DOB</th>
+    <th col-id='address'>Address</th>
+  </tr>
+</table>
+<button id="btn-list" type="button" onclick="location.href='/add-user'">Add</button>
+<script>
+$(document).ready(getUsers());
+function getUsers() {
+    $.get("/api/list", function(data, status){
+       var table = document.getElementById('table-users');
+       jQuery.each(data["users"], function(i, val) {
+           var tr = "<tr><td col-id='id'>";
+           tr += val["id"] + "</td><td col-id='username'>";
+           tr += val["username"] + "</td><td col-id='email'>";
+           tr += val["email"] + "</td><td col-id='dob'>";
+           tr += val["dob"] + "</td><td col-id='address'>";
+           tr += val["address"] + "</td></tr>";
+           table.innerHTML += tr;
+           }
+       )
+    });
+}
+</script>
+</body>
 </html>

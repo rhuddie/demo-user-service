@@ -22,6 +22,16 @@ def add_user(context):
 def validate_user_added(context):
     page = AddUserPage(context)
     status = page.status
-    assert status.is_success(), f'Message type is not success: "{status.message_type}"'
     msg = status.message
-    assert msg == "User successfully added!", f'Unexpected error message observed: "{msg}"'
+    assert status.is_success() and msg == "User successfully added!", (
+        f'User was not added successfully :: Message type: "{status.message_type}" :: "{msg}"')
+
+
+@step("I see user was not added successfully")
+def validate_user_add_error(context):
+    page = AddUserPage(context)
+    status = page.status
+    msg = status.message
+    assert status.is_error() and msg.startswith("Error adding user:"), (
+        f'User was not added successfully :: Message type: "{status.message_type}" :: "{msg}"')
+

@@ -39,7 +39,6 @@ def add_test_user_session(app_session):
     with app_session.app.app_context():
         app_session.db.session.add(user)
         app_session.db.session.commit()
-        print('DONE')
     yield app_session
     delete_test_user(app_session)
 

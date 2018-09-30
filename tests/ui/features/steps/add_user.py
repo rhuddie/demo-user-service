@@ -34,4 +34,3 @@ def validate_user_add_error(context):
     msg = status.message
     assert status.is_error() and msg.startswith("Error adding user:"), (
         f'User was not added successfully :: Message type: "{status.message_type}" :: "{msg}"')
-

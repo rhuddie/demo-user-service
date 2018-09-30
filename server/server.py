@@ -2,20 +2,16 @@ from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 from threading import Thread
-from time import sleep
 
 
 import argparse
-import asyncio
 import os
 import re
-import requests
 import socket
 
 from collections import namedtuple
 from datetime import datetime
 from flask import Flask
-from flask import g
 from flask import render_template
 from flask import request
 from flask_restful import (
@@ -25,8 +21,6 @@ from flask_restful import (
 )
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError as SQLAlchemyIntegrityError
-
-
 
 AppSession = namedtuple('AppSession', ['app', 'db', 'api'])
 
@@ -72,7 +66,10 @@ def list_users():
 def hello():
     html = "<h3>Hello {name}!</h3>" \
            "<b>Hostname:</b> {hostname}<br/>"
-    return html.format(name=os.getenv("NAME", "world"), hostname=socket.gethostname())
+    return html.format(
+        name=os.getenv("NAME", "world"),
+        hostname=socket.gethostname()
+    )
 
 
 class User(db.Model):
@@ -87,10 +84,6 @@ class User(db.Model):
 
 
 class AddUser(Resource):
-
-    def get(self):
-        req_args = request_parser.parse_args()
-        return {'data': 'hello world!'}, 200
 
     def post(self):
         data = {field: request.form.get(field) for field in ADD_FIELDS}
@@ -113,15 +106,8 @@ class AddUser(Resource):
 class ListUsers(Resource):
 
     def get(self):
-        req_args = request_parser.parse_args()
         users = User.query.all()
-        data = {
-            'users': [{field: getattr(u, field) for field in User.__table__.columns.keys()} for u in users]
-        }
-        return data
-
-    def post(self):
-        req_args = request_parser.parse_args()
+        return {'users': [{k: getattr(u, k) for k in User.__table__.columns.keys()} for u in users]}
 
 
 def get_db_path(db_name):
@@ -162,4 +148,3 @@ if __name__ == "__main__":
     args = parser.parse_args()
     server_port = int(os.getenv('SERVER_PORT', 5000))
     start_service(get_db_path(args.db), server_port)
-

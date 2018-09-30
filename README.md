@@ -15,6 +15,12 @@ This Python repo includes:
 
 ### Build docker images
 
+Clone the repo and run from root folder:
+
+`git clone https://github.com/rhuddie/demo-user-service.git`
+
+`cd demo-user-service`
+
 `docker build -t demo-server .`
 
 `docker build -t demo-server-tests -f Dockerfile.tests .`
@@ -64,3 +70,19 @@ As docker image:
 or with docker-compose:
 
 `docker-compose --file docker-compose-tests.yml up`
+
+## Development environment
+
+Create virtualenv:
+
+`virtualenv --python=python3.6 demo-server`
+`source demo-server/bin/activate`
+`sudo pip install -r requirements.txt -r requirements.tests.txt`
+
+### Run the server
+
+`SERVER_PORT=5001 python server/server.py`
+
+### Run the tests
+
+`SERVER_PORT=5001 ./run_tests.sh`

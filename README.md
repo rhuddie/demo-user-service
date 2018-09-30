@@ -37,7 +37,7 @@ or with docker-compose:
 
 `docker-compose --file docker-compose.yml up`
 
-and to stop again:
+and to stop and remove:
 
 `docker-compose --file docker-compose.yml down`
 
@@ -70,6 +70,10 @@ As docker image:
 or with docker-compose:
 
 `docker-compose --file docker-compose-tests.yml up`
+
+and remove:
+
+`docker-compose --file docker-compose-tests.yml down`
 
 ## Development environment
 

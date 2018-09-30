@@ -26,4 +26,4 @@ RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add
 EXPOSE 5001
 
 # Run server.py when the container launches
-CMD ["bash", "run_tests.sh"]
+CMD ["bash", "./tests/run_tests.sh"]

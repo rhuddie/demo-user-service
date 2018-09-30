@@ -6,11 +6,22 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 
 def find_custom_element(root, cls, by, selector, timeout):
-    element = WebDriverWait(root, timeout).until(
-        lambda driver: root.find_element(by, selector),
-        message="Could not find object using selector: {}".format(selector))
+    element = _find(root, root.find_element, by, selector, timeout)
     element.__class__ = cls
     return element
+
+
+def find_custom_elements(root, cls, by, selector, timeout):
+    elements = _find(root, root.find_elements, by, selector, timeout)
+    for element in elements:
+        element.__class__ = cls
+    return elements
+
+
+def _find(root, finder_method, by, selector, timeout):
+    return WebDriverWait(root, timeout).until(
+        lambda driver: finder_method(by, selector),
+        message="Could not find object using selector: {}".format(selector))
 
 
 class WebdriverBase:
@@ -36,6 +47,9 @@ class WebdriverBase:
     def find_custom_element(self, cls, by, selector, timeout=0):
         return find_custom_element(self.driver, cls, by, selector, timeout)
 
+    def find_custom_elements(self, cls, by, selector, timeout=0):
+        return find_custom_elements(self.driver, cls, by, selector, timeout)
+
 
 class CustomElement(WebElement):
 
@@ -44,3 +58,6 @@ class CustomElement(WebElement):
 
     def find_custom_element(self, cls, by, selector, timeout=0):
         return find_custom_element(self, cls, by, selector, timeout)
+
+    def find_custom_elements(self, cls, by, selector, timeout=0):
+        return find_custom_elements(self, cls, by, selector, timeout)

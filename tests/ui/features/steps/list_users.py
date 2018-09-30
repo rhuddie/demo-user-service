@@ -10,4 +10,5 @@ def navigate_to_new_user_form(context):
 
 @step('I see {count} users listed')
 def add_user(context, count):
-    ListUsersPage(context)
+    obs_count = ListUsersPage(context).row_count()
+    assert obs_count == int(count), f'Expected count {count} does not match observed count {obs_count}!'

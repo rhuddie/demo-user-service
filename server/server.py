@@ -39,6 +39,7 @@ def configure_service(db_path):
     global app
     global db
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + db_path
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.init_app(app)
     api.add_resource(AddUser, '/api/add')
     api.add_resource(ListUsers, '/api/list')
@@ -58,13 +59,8 @@ def list_users():
 
 
 @app.route("/")
-def hello():
-    html = "<h3>Hello {name}!</h3>" \
-           "<b>Hostname:</b> {hostname}<br/>"
-    return html.format(
-        name=os.getenv("NAME", "world"),
-        hostname=socket.gethostname()
-    )
+def home():
+    return render_template("home.html")
 
 
 class User(db.Model):

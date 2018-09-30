@@ -1,4 +1,5 @@
 from behave import step
+from collections import namedtuple
 
 from server.server import (
     User
@@ -10,6 +11,8 @@ TEST_USER = {
     'dob': '22/9/54',
     'address': 'Bag End, Hobbiton'
 }
+
+UserData = namedtuple('UserData', ['username', 'email', 'dob', 'address'])
 
 
 @step("I start with an empty database")
@@ -34,3 +37,12 @@ def assert_user_count(context, count):
         users = context.session.db.session.query(User)
     obs_len = len(users.all())
     assert obs_len == int(count), f'Observed user count {obs_len} does not match expected {count}'
+
+
+@step("user database contains {count} record matching: {data}")
+def assert_user_exists(context, count, data):
+    user_data = UserData(*data.split(', ', maxsplit=3))._asdict()
+    with context.session.app.app_context():
+        users = context.session.db.session.query(User).filter_by(**user_data).all()
+    obs_len = len(users)
+    assert obs_len == int(count), f'{count} record should exist for user, but observed {obs_len}!'

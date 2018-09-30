@@ -75,9 +75,11 @@ or with docker-compose:
 
 Create virtualenv:
 
-`virtualenv --python=python3.6 demo-server`  
-`source demo-server/bin/activate`  
-`sudo pip install -r requirements.txt -r requirements.tests.txt`  
+`virtualenv --python=python3.6 demo-server`
+
+`source demo-server/bin/activate`
+
+`sudo pip install -r requirements.txt -r requirements.tests.txt`
 
 ### Run the server
 

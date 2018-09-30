@@ -1,0 +1,4 @@
+pytest
+sqlalchemy
+behave
+selenium

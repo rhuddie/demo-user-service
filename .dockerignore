@@ -1,0 +1,5 @@
+# Files to exclude from docker images
+**/*.pyc
+
+# Don't include the user database
+server/*.db

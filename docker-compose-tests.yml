@@ -1,0 +1,12 @@
+version: '2'
+services:
+  demo-server-tests:
+    image: demo-server-tests
+    build:
+      context: .
+      dockerfile: Dockerfile.tests
+    environment:
+      - HEADLESS=1
+      - SERVER_PORT=5001
+    ports:
+    - "5001:5001"

@@ -1,0 +1,67 @@
+<html>
+  <style>
+    form  { display: table;      }
+    p     { display: table-row;  }
+    label { display: table-cell; }
+    input { display: table-cell; }
+  </style>
+  <body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <h1>Add User</h1>
+    <form id="form-user-input">
+      <p>
+        <label for="input-username">username:</label>
+        <input id="input-username" name="username" type="text">
+      </p>
+      <p>
+        <label for="input-email">email:</label>
+        <input id="input-email" name="email" type="text">
+      </p>
+      <p>
+        <label for="input-dob">dob:</label>
+        <input id="input-dob" name="dob" type="text">
+      </p>
+      <p>
+        <label for="input-address">address:</label>
+        <input id="input-address" name="address" type="text">
+      </p>
+      <input id="btn-add" type="button" value="Add" onclick="postUser();"><br>
+      <input id="btn-reset" type="button" value="Reset" onclick="resetForm()" ><br>
+      <input id="btn-list" type="button" value="List" onclick="location.href='/list-users'" >
+    </form>
+    <p id="status-text"></p>
+    <script>
+    function getData() {
+        var array = jQuery($("#form-user-input")).serializeArray();
+        var json = {};
+        jQuery.each(array, function() {
+            json[this.name] = this.value || '';
+        });
+        return json;
+    }
+    function resetForm() {
+        document.getElementById("form-user-input").reset();
+        var status = document.getElementById("status-text")
+        status.innerHTML = ""
+        status.setAttribute("type", "hidden")
+    }
+    function onSuccess() {
+        document.getElementById("form-user-input").reset();
+        var status = document.getElementById("status-text")
+        status.innerHTML = "User successfully added!"
+        status.setAttribute("type", "success")
+    }
+    function onError(error) {
+        var status = document.getElementById("status-text")
+        status.innerHTML = "Error adding user: " + error.responseJSON
+        status.setAttribute("type", "error")
+    }
+    function postUser() {
+        data = getData();
+        $.post("/api/add", data)
+          .done(onSuccess)
+          .fail(onError);
+    }
+    </script>
+  </body>
+</html>

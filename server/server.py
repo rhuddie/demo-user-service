@@ -1,7 +1,6 @@
 import argparse
 import os
 import re
-import socket
 
 from collections import namedtuple
 from datetime import datetime

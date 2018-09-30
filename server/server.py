@@ -1,9 +1,3 @@
-from tornado.wsgi import WSGIContainer
-from tornado.httpserver import HTTPServer
-from tornado.ioloop import IOLoop
-from threading import Thread
-
-
 import argparse
 import os
 import re
@@ -21,18 +15,19 @@ from flask_restful import (
 )
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError as SQLAlchemyIntegrityError
-
-AppSession = namedtuple('AppSession', ['app', 'db', 'api'])
-
-request_parser = reqparse.RequestParser()
+from tornado.wsgi import WSGIContainer
+from tornado.httpserver import HTTPServer
+from tornado.ioloop import IOLoop
+from threading import Thread
 
 ADD_FIELDS = ['username', 'email', 'dob', 'address']
 GET_FIELDS = ['id'] + ADD_FIELDS
+AppSession = namedtuple('AppSession', ['app', 'db', 'api'])
+request_parser = reqparse.RequestParser()
 
 db = SQLAlchemy()
 app = Flask(__name__)
 api = Api(app)
-
 
 server_thread = None
 server_thread_io_loop = None
@@ -79,13 +74,11 @@ class User(db.Model):
     dob = db.Column(db.String(80), unique=False, nullable=False, primary_key=False)
     address = db.Column(db.String(80), unique=False, nullable=False, primary_key=False)
 
-    def __repr__(self):
-        return "<Title: {}>".format(self.title)
-
 
 class AddUser(Resource):
 
-    def post(self):
+    @staticmethod
+    def post():
         data = {field: request.form.get(field) for field in ADD_FIELDS}
         if not all(data.values()):
             return "Incomplete form data!", 500
@@ -105,7 +98,8 @@ class AddUser(Resource):
 
 class ListUsers(Resource):
 
-    def get(self):
+    @staticmethod
+    def get():
         users = User.query.all()
         return {'users': [{k: getattr(u, k) for k in User.__table__.columns.keys()} for u in users]}
 
@@ -130,9 +124,6 @@ def start_app(port):
     global server_thread
     server_thread = Thread(target=start)
     server_thread.start()
-    # wait for the server to fully initialize
-    # sleep(10)
-    # stop_app()
 
 
 def stop_app():

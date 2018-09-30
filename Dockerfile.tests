@@ -8,7 +8,7 @@ WORKDIR /demo-server
 COPY . /demo-server
 
 # Install any needed packages specified in requirements.txt
-RUN pip install --trusted-host pypi.python.org -r requirements.txt
+RUN pip install --trusted-host pypi.python.org -r requirements.txt -r requirements.tests.txt
 
 RUN rm -rf /var/lib/apt/lists/*
 RUN apt-get -y update && \
@@ -22,8 +22,8 @@ RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add
         google-chrome-stable \
         chromedriver
 
-# Make port 5000 available to the world outside this container
-EXPOSE 80
+# Make port 5001 available to the world outside this container
+EXPOSE 5001
 
 # Run server.py when the container launches
 CMD ["bash", "run_tests.sh"]

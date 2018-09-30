@@ -20,6 +20,9 @@ class ListUsersPage:
     def row_count(self):
         return len(self.table)
 
+    def row_exists(self, **kwargs):
+        return bool(self.table.get_row_with_values(**kwargs))
+
 
 class UserTable(CustomElement):
 
@@ -36,6 +39,19 @@ class UserTable(CustomElement):
             )
         except TimeoutException:
             return []
+
+    def get_row_with_values(self, **kwargs):
+        col_selector = 'td[@col-id="{}" and text()="{}"]'
+        col_selectors = [col_selector.format(key, value) for key, value in kwargs.items()]
+        row_selector = 'descendant::tr[' + ' and '.join(col_selectors) + ']'
+        try:
+            return self.find_custom_element(
+                UserTableRow,
+                By.XPATH,
+                row_selector
+            )
+        except TimeoutException:
+            return None
 
 
 class UserTableRow(CustomElement):

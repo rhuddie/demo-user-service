@@ -4,6 +4,7 @@ from collections import namedtuple
 from server.server import (
     User
 )
+from tests.ui.features.steps.common import get_test_data_as_dict
 
 TEST_USER = {
     'username': 'bilbobaggins',
@@ -41,7 +42,7 @@ def assert_user_count(context, count):
 
 @step("user database contains {count} record matching: {data}")
 def assert_user_exists(context, count, data):
-    user_data = UserData(*data.split(', ', maxsplit=3))._asdict()
+    user_data = get_test_data_as_dict(data)
     with context.session.app.app_context():
         users = context.session.db.session.query(User).filter_by(**user_data).all()
     obs_len = len(users)

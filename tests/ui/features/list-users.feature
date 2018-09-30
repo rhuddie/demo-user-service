@@ -9,3 +9,4 @@ Feature: List user form
     Given I start with a database with test user already added
     And I am on the list users form
     Then I see 1 users listed
+    And I see a record with values: bilbobaggins, bilbo@baggins.com, 22/9/54, Bag End, Hobbiton

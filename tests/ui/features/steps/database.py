@@ -4,25 +4,20 @@ from server.server import (
     User
 )
 from tests.common import (
+    add_test_user,
+    delete_all_users,
     get_test_data_as_dict,
-    TEST_USER,
 )
 
 
 @step("I start with an empty database")
 def start_empty_database(context):
-    with context.session.app.app_context():
-        context.session.db.session.query(User).delete()
-        context.session.db.session.commit()
+    delete_all_users(context.session)
 
 
 @step("I start with a database with test user already added")
 def start_test_user_added_database(context):
-    user = User(**TEST_USER)
-    with context.session.app.app_context():
-        context.session.db.session.query(User).delete()
-        context.session.db.session.add(user)
-        context.session.db.session.commit()
+    add_test_user(context.session)
 
 
 @step("there are {count} users in the database")

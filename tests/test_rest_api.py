@@ -6,19 +6,11 @@ from server.server import (
     get_db_path,
     User,
 )
-from tests.common import TEST_USER
-
-
-def delete_test_user(session):
-    with session.app.app_context():
-        User.query.filter_by(**TEST_USER).delete()
-        session.db.session.commit()
-
-
-def delete_all_users(session):
-    with session.app.app_context():
-        session.db.session.query(User).delete()
-        session.db.session.commit()
+from tests.common import (
+    delete_all_users,
+    delete_test_user,
+    TEST_USER,
+)
 
 
 @pytest.fixture(scope="module")

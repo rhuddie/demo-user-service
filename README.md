@@ -91,7 +91,7 @@ Create virtualenv:
 
 `source demo-server/bin/activate`
 
-`sudo pip install -r requirements.txt -r requirements.tests.txt`
+`pip install -r requirements.txt -r requirements.tests.txt`
 
 ### Run the server
 

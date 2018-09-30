@@ -41,6 +41,10 @@ and to stop and remove:
 
 `docker-compose --file docker-compose.yml down`
 
+Utility scripts are also provided to run the above commands:
+
+`./build_and_run_server.sh` and `./stop_server.sh`
+
 #### Add a new user:
 
 Visit url with browser:
@@ -75,6 +79,10 @@ and remove:
 
 `docker-compose --file docker-compose-tests.yml down`
 
+A utility script is also provided to run the above commands:
+
+`./build_and_run_tests.sh`
+
 ## Development environment
 
 Create virtualenv:
@@ -87,8 +95,8 @@ Create virtualenv:
 
 ### Run the server
 
-`SERVER_PORT=5001 python server/server.py`
+`SERVER_PORT=5000 python server/server.py`
 
 ### Run the tests
 
-`SERVER_PORT=5001 ./run_tests.sh`
+`SERVER_PORT=5000 ./tests/run_tests.sh`

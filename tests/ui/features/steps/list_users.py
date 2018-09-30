@@ -1,7 +1,7 @@
 from behave import step
 
 from tests.ui.features.pages.list_users import ListUsersPage
-from tests.ui.features.steps.common import get_test_data_as_dict
+from tests.common import get_test_data_as_dict
 
 
 @step('I am on the list users form')

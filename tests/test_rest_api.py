@@ -6,8 +6,7 @@ from server.server import (
     get_db_path,
     User,
 )
-
-TEST_USER = {'username': 'aa', 'email': 'bb', 'dob': 'cc', 'address': 'dd'}
+from tests.common import TEST_USER
 
 
 def delete_test_user(session):
@@ -34,7 +33,7 @@ def app_session(request):
 
 
 @pytest.fixture(scope="function")
-def add_test_user_session(app_session):
+def populated_database(app_session):
     user = User(**TEST_USER)
     with app_session.app.app_context():
         app_session.db.session.add(user)
@@ -54,28 +53,45 @@ def test_api_add_user(empty_database):
     with empty_database.api.app.test_client() as c:
         r = c.post('/api/add', data=TEST_USER)
         assert r.status_code == 200
-        print(r.data)
-        # TODO make this cleanup step
-        # delete_test_user(app_session)
 
 
-def test_api_list_existing_user(add_test_user_session):
-    with add_test_user_session.api.app.test_client() as c:
+def test_api_add_user_invalid_email(empty_database):
+    user = TEST_USER
+    user['email'] = 'invalidemail.com'
+    with empty_database.api.app.test_client() as c:
+        r = c.post('/api/add', data=user)
+        assert r.status_code == 500
+
+
+def test_api_add_user_invalid_dob(empty_database):
+    user = TEST_USER
+    user['dob'] = 'invaliddate'
+    with empty_database.api.app.test_client() as c:
+        r = c.post('/api/add', data=user)
+        assert r.status_code == 500
+
+
+def test_api_add_user_incomplete_data(empty_database):
+    user = TEST_USER.copy()
+    user.pop('address')
+    with empty_database.api.app.test_client() as c:
+        r = c.post('/api/add', data=user)
+        assert r.status_code == 500
+
+
+def test_api_add_duplicate_user(populated_database):
+    with populated_database.api.app.test_client() as c:
+        r = c.post('/api/add', data=TEST_USER)
+        assert r.status_code == 500
+
+
+def test_api_list_existing_user(populated_database):
+    with populated_database.api.app.test_client() as c:
         r = c.get('/api/list')
         assert r.status_code == 200
-        print(r.data)
 
 
 def test_api_list_no_users(empty_database):
     with empty_database.api.app.test_client() as c:
         r = c.get('/api/list')
         assert r.status_code == 200
-        print(r.data)
-
-
-def test_list_users(app_session):
-    with app_session.app.test_client() as c:
-        # This works with html page not rest api
-        r = c.get('/list-users')
-        assert r.status_code == 200
-        print(r.data)

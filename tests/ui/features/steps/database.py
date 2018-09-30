@@ -1,19 +1,12 @@
 from behave import step
-from collections import namedtuple
 
 from server.server import (
     User
 )
-from tests.ui.features.steps.common import get_test_data_as_dict
-
-TEST_USER = {
-    'username': 'bilbobaggins',
-    'email': 'bilbo@baggins.com',
-    'dob': '22/9/54',
-    'address': 'Bag End, Hobbiton'
-}
-
-UserData = namedtuple('UserData', ['username', 'email', 'dob', 'address'])
+from tests.common import (
+    get_test_data_as_dict,
+    TEST_USER,
+)
 
 
 @step("I start with an empty database")

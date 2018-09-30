@@ -8,10 +8,12 @@ from time import sleep
 import argparse
 import asyncio
 import os
+import re
 import requests
 import socket
 
 from collections import namedtuple
+from datetime import datetime
 from flask import Flask
 from flask import g
 from flask import render_template
@@ -94,6 +96,12 @@ class AddUser(Resource):
         data = {field: request.form.get(field) for field in ADD_FIELDS}
         if not all(data.values()):
             return "Incomplete form data!", 500
+        if not bool(re.match(r"[^@]+@[^@]+\.[^@]+", data['email'])):
+            return f"Invalid email address: {data['email']}!", 500
+        try:
+            datetime.strptime(data['dob'], "%d/%m/%Y")
+        except ValueError:
+            return f"Invalid dob: {data['dob']}! Should by DD/MM/YYYY", 500
         user = User(**data)
         db.session.add(user)
         try:

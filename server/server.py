@@ -89,6 +89,7 @@ class AddUser(Resource):
             db.session.commit()
         except SQLAlchemyIntegrityError as e:
             return str(e.orig), 500
+        return user.id, 200
 
 
 class ListUsers(Resource):

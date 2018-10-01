@@ -1,5 +1,8 @@
 # Files to exclude from docker images
 **/*.pyc
+**/__pycache__
 
 # Don't include the user database
 server/*.db
+
+.pytest_cache

@@ -1,3 +1,3 @@
 #!/bin/sh
-pytest ./tests/test_rest_api.py
-behave ./tests/ui/features
+pytest ./tests/py/test_rest_api.py
+behave ./tests/py/ui/features
